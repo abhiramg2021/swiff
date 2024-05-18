@@ -47,7 +47,7 @@ def generate_launch_description():
             "world": os.path.join(
                 get_package_share_directory("swiff_bringup"),
                 "worlds",
-                "smaller_room.world",
+                "simple.world",
             )
         }.items(),
     )
@@ -78,18 +78,6 @@ def generate_launch_description():
         output="screen",
     )
 
-    # nav2 = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource(
-    #         [
-    #             os.path.join(
-    #                 get_package_share_directory("nav2_bringup"),
-    #                 "launch",
-    #                 "navigation_launch.py",
-    #             )
-    #         ]
-    #     )
-    # )
-
     slam_toolbox = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             [
@@ -102,7 +90,7 @@ def generate_launch_description():
         )
     )
 
-    delayed_launch = TimerAction(period=3.0, actions=[rviz2, slam_toolbox])
+    delayed_launch = TimerAction(period=5.0, actions=[rviz2, slam_toolbox])
 
     return LaunchDescription(
         [joystick, robot_state_publisher, gazebo, spawn_turtlebot3, delayed_launch]

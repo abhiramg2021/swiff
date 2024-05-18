@@ -88,20 +88,10 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
     <state world_name='default'>
-      <sim_time>785 57000000</sim_time>
-      <real_time>79 277713342</real_time>
-      <wall_time>1716045257 749781462</wall_time>
-      <iterations>77768</iterations>
-      <model name='Construction Barrel'>
-        <pose>2.73428 0.032762 -1e-06 0 4e-06 0.331911</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose>2.73428 0.032762 -1e-06 0 4e-06 0.331911</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>2.90374 7.04141 3.16854 1.23753 0.975448 -0.00568</acceleration>
-          <wrench>1451.87 3520.7 1584.27 0 -0 0</wrench>
-        </link>
-      </model>
+      <sim_time>835 619000000</sim_time>
+      <real_time>52 42169824</real_time>
+      <wall_time>1716050884 807112807</wall_time>
+      <iterations>50562</iterations>
       <model name='ground_plane'>
         <pose>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -113,7 +103,7 @@
         </link>
       </model>
       <model name='super_small_room'>
-        <pose>1.19529 -0.478704 0 0 -0 0</pose>
+        <pose>1.19529 -0.4787 0 0 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='Wall_13'>
           <pose>1.19529 1.1963 0 0 -0 0</pose>
@@ -140,64 +130,27 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
+      <model name='unit_cylinder'>
+        <pose>2.02959 -0.143724 0.499997 3e-06 -4e-06 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>2.02959 -0.143724 0.499997 3e-06 -4e-06 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 -9.8 0 -0 0</acceleration>
+          <wrench>0 0 -9.8 0 -0 0</wrench>
+        </link>
+      </model>
       <light name='sun'>
         <pose>0 0 10 0 -0 0</pose>
       </light>
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>2.48453 -4.94267 14.3407 0 1.3378 1.92357</pose>
+        <pose>2.62396 -4.89134 14.3407 0 1.3378 1.92357</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
     </gui>
-    <model name='Construction Barrel'>
-      <link name='link'>
-        <inertial>
-          <pose>0 0 0.4 0 -0 0</pose>
-          <mass>500</mass>
-          <inertia>
-            <ixx>51.2096</ixx>
-            <iyy>51.2096</iyy>
-            <izz>25</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-        </inertial>
-        <collision name='collision'>
-          <geometry>
-            <mesh>
-              <uri>model://construction_barrel/meshes/construction_barrel.dae</uri>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-            <friction>
-              <torsional>
-                <ode/>
-              </torsional>
-              <ode/>
-            </friction>
-          </surface>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <uri>model://construction_barrel/meshes/construction_barrel.dae</uri>
-            </mesh>
-          </geometry>
-        </visual>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-      <pose>4.9206 0.638586 0 0 -0 0</pose>
-    </model>
     <model name='super_small_room'>
       <pose>1.19529 -0.478704 0 0 -0 0</pose>
       <link name='Wall_13'>
@@ -381,6 +334,61 @@
         <kinematic>0</kinematic>
       </link>
       <static>1</static>
+    </model>
+    <model name='unit_cylinder'>
+      <pose>2.52361 0.210282 0.5 0 -0 0</pose>
+      <link name='link'>
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <pose>0 0 0 0 -0 0</pose>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
     </model>
   </world>
 </sdf>
