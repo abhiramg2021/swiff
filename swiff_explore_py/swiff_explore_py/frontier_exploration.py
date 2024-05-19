@@ -4,9 +4,12 @@ import math
 import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import OccupancyGrid
+from action_msgs.msg import GoalStatusArray
 from geometry_msgs.msg import PoseStamped
 import tf2_ros
 from tf_transformations import quaternion_from_euler
+
+import numpy as np
 
 
 class FrontierExploration(Node):
@@ -33,60 +36,72 @@ class FrontierExploration(Node):
         self.tf_buffer = tf2_ros.Buffer()
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)
 
-    def index_to_coord(self, index: int, grid_width: int) -> tuple[int, int]:
+        self.goal_status_subscriber = self.create_subscription(
+            GoalStatusArray,
+            "/navigate_to_pose/_action/status",
+            self.goal_status_callback,
+            10,
+        )
+        self.current_goal = None
+        self.visited_goals = []
+
+        self.map_ = None
+        self.map_info = None
+
+    def index_to_coord(self, index: int, map_width: int) -> tuple[int, int]:
         """
         Converts a 1D index to x, y coordinates
 
         Args:
             index (int): 1D index
-            grid_width (int): width of the map
+            map_width (int): width of the map
         Returns:
             tuple[int, int]: x, y coordinates
         """
 
-        x = index % grid_width
-        y = index // grid_width
+        x = index % map_width
+        y = index // map_width
         return x, y
 
-    def coord_to_index(self, x: int, y: int, grid_width: int) -> int:
+    def coord_to_index(self, x: int, y: int, map_width: int) -> int:
         """
         Converts x, y coordinates to a 1D index
 
         Args:
             x (int): x coordinate
             y (int): y coordinate
-            grid_width (int): width of the map
+            map_width (int): width of the map
         Returns:
             int: 1D index
         """
-        return y * grid_width + x
+        return y * map_width + x
 
-    def is_frontier_cell(self, index: int, grid: list[int], grid_width: int) -> bool:
+    def is_frontier_cell(self, index: int, map_: list[int], map_width: int) -> bool:
         """
-        Indicates whether grid[index] is a frontier cell.
+        Indicates whether map_[index] is a frontier cell.
         Check if there is any neighbor cells that are explored (cell value must equal 0).
 
         Args:
             index (int): cell index
-            grid (list[int]): map
-            grid_width (int): width of the map
+            map_ (list[int]): map
+            map_width (int): width of the map
 
         Returns:
-            bool: True if grid[index] is a frontier cell
+            bool: True if map_[index] is a frontier cell
         """
-        if grid[index] != -1:
+        if map_[index] != -1:
             return False
 
         num_free_neighbors = 0
         for dx, dy in FrontierExploration.NEIGHBORS:
-            x, y = self.index_to_coord(index, grid_width)
+            x, y = self.index_to_coord(index, map_width)
 
-            neighbor_index = self.coord_to_index(x + dx, y + dy, grid_width)
+            neighbor_index = self.coord_to_index(x + dx, y + dy, map_width)
 
-            if neighbor_index < 0 or neighbor_index >= len(grid):
+            if neighbor_index < 0 or neighbor_index >= len(map_):
                 continue
 
-            if grid[neighbor_index] == 0:
+            if map_[neighbor_index] == 0:
                 num_free_neighbors += 1
 
             if num_free_neighbors >= 4:
@@ -95,35 +110,36 @@ class FrontierExploration(Node):
         return False
 
     def compute_frontier_cells(
-        self, grid: list[int], grid_width: int
+        self, map_: list[int], map_width: int
     ) -> list[tuple[int, int]]:
         """
         Compute the frontier cells for the map.
 
         Args:
-            grid (list[int]): map, A 1D list of integers (-1 = unexplored, 0 = explored, 100 = obstacle)
-            grid_width (int): width of the map
+            map_ (list[int]): map, A 1D list of integers (-1 = unexplored, 0 = explored, 100 = obstacle)
+            map_width (int): width of the map
 
         Returns:
             list[tuple[int, int]]: A list of coordinates that form the frontier cells. Instead of index I, the (x,y) coordinates are returned.
         """
 
         frontier_cells = []
-        for index in range(len(grid)):
-            if self.is_frontier_cell(index, grid, grid_width):
-                x, y = self.index_to_coord(index, grid_width)
+        for index in range(len(map_)):
+            if self.is_frontier_cell(index, map_, map_width):
+                x, y = self.index_to_coord(index, map_width)
                 frontier_cells.append((x, y))
 
         return frontier_cells
 
     def compute_frontier_components(
-        self, frontier_cells: list[tuple[int, int]]
+        self, frontier_cells: list[tuple[int, int]], min_size: int
     ) -> list[list[tuple[int, int]]]:
         """
         Compute frontier components from frontier cells.
 
         Args:
             frontier_cells (list[tuple[int, int]]): frontier cells
+            min_size (int): minimum size of a frontier component
 
         Returns:
             list[list[tuple[int, int]]]: frontier components
@@ -154,8 +170,8 @@ class FrontierExploration(Node):
 
                     if (x, y) in frontier_cells:
                         stack.append((x, y))
-
-            frontier_components.append(frontier_component)
+            if len(frontier_component) >= min_size:
+                frontier_components.append(frontier_component)
         return frontier_components
 
     def find_centroid(self, points: list[tuple[int, int]]) -> tuple[int, int]:
@@ -256,7 +272,6 @@ class FrontierExploration(Node):
         self,
         centroids: list[tuple[float, float]],
         robot_pos: tuple[float, float],
-        min_dist: float = 0.5,
     ) -> tuple[float, float]:
         """
         Choose the centroid that is closest to the robot position
@@ -264,19 +279,33 @@ class FrontierExploration(Node):
         Args:
             centroids (list[tuple[float, float]]): list of centroids
             robot_pos (tuple[float, float]): x, y coordinates of the robot
-            min_dist (float): minimum distance from the robot to the centroid (so we don't pick centroids that are too close to the robot)
 
         Returns:
             tuple[float, float]: x, y coordinates of the chosen centroid
         """
+
+        visited_goals = np.array(self.visited_goals)
         closest_centroid = None
         closest_centroid_dist = float("inf")
         for centroid in centroids:
             dist = self.euclidean_dist(robot_pos, centroid)
-            if dist < closest_centroid_dist and dist > min_dist:
+            if dist < closest_centroid_dist:
+                if len(visited_goals) > 0 and np.any(
+                    np.linalg.norm(
+                        visited_goals
+                        - np.array(
+                            [
+                                centroid,
+                            ]
+                        ),
+                        axis=1,
+                    )
+                    < 0.5
+                ):
+                    continue
+
                 closest_centroid = centroid
                 closest_centroid_dist = dist
-
         return closest_centroid
 
     def publish_new_goal(
@@ -308,28 +337,51 @@ class FrontierExploration(Node):
 
         print("Goal pose: ", goal_pose.pose.position.x, goal_pose.pose.position.y)
 
-    def map_callback(self, msg: OccupancyGrid) -> None:
+    def explore(self) -> None:
+        """
+        The frontier exploration algorithm.
 
-        frontier_cells = self.compute_frontier_cells(msg.data, msg.info.width)
+        """
+        frontier_cells = self.compute_frontier_cells(self.map_, self.map_info.width)
 
         if len(frontier_cells) == 0:
             print("No frontier cells found.")
             return
 
-        frontier_components = self.compute_frontier_components(frontier_cells)
+        frontier_components = self.compute_frontier_components(
+            frontier_cells, min_size=4
+        )
         centroids = self.compute_frontier_centroids(frontier_components)
-        centroids = self.convert_coords_to_map_coords(centroids, msg.info)
+        centroids = self.convert_coords_to_map_coords(centroids, self.map_info)
 
         robot_pos = self.get_robot_position()
 
         # find closest centroid to robot position
-        closest_centroid = self.choose_centroid(centroids, robot_pos, min_dist=1)
+        closest_centroid = self.choose_centroid(centroids, robot_pos)
 
         if closest_centroid is None:
             print("No valid centroid found.")
             return
 
+        if self.current_goal == closest_centroid:
+            print("Already navigating to this goal.")
+            return
+
+        self.current_goal = closest_centroid
         self.publish_new_goal(robot_pos, closest_centroid)
+
+    def map_callback(self, msg: OccupancyGrid) -> None:
+        self.map_ = msg.data
+        self.map_info = msg.info
+        self.explore()
+
+    def goal_status_callback(self, msg: GoalStatusArray) -> None:
+
+        latest_goal_status = msg.status_list[-1].status
+        print("Goal status: ", latest_goal_status)
+        if latest_goal_status in [4, 6]:
+            self.visited_goals.append(self.current_goal)
+            self.current_goal = None
 
 
 def main(args=None):
