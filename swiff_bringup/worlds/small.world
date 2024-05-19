@@ -88,58 +88,58 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
     <state world_name='default'>
-      <sim_time>965 510000000</sim_time>
-      <real_time>131 598389497</real_time>
-      <wall_time>1716073752 741675411</wall_time>
-      <iterations>129891</iterations>
+      <sim_time>1076 376000000</sim_time>
+      <real_time>123 985909802</real_time>
+      <wall_time>1716147094 278494731</wall_time>
+      <iterations>110866</iterations>
       <model name='cardboard_box'>
-        <pose>2.10104 0.388084 0.149 0 -0 0</pose>
+        <pose>2.10104 0.032089 0.149 0 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>2.10104 0.388084 0.149 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 -1.9e-05 0 0.000128 2e-06 0</acceleration>
-          <wrench>1e-06 -3.8e-05 1e-06 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='cardboard_box_clone'>
-        <pose>2.11444 -0.47504 0.149 0 -0 0</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose>2.11444 -0.47504 0.149 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>-0 -1.9e-05 0 0.000128 -2e-06 -0</acceleration>
-          <wrench>-1e-06 -3.8e-05 1e-06 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='cardboard_box_clone_0'>
-        <pose>2.13132 -1.12485 0.149 0 -0 0</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose>2.13132 -1.12485 0.149 0 -0 0</pose>
+          <pose>2.10104 0.032089 0.149 0 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 1.9e-05 -0 -0.000128 2e-06 -0</acceleration>
           <wrench>1e-06 3.8e-05 -1e-06 0 -0 0</wrench>
         </link>
       </model>
-      <model name='cardboard_box_clone_1'>
-        <pose>2.75024 -0.835708 0.149 0 -0 0</pose>
+      <model name='cardboard_box_clone'>
+        <pose>1.19733 -1.13751 0.149 0 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>2.75024 -0.835708 0.149 0 -0 0</pose>
+          <pose>1.19733 -1.13751 0.149 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 1.9e-05 -0 -0.000128 2e-06 -0</acceleration>
+          <wrench>1e-06 3.8e-05 -1e-06 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='cardboard_box_clone_clone'>
+        <pose>2.64291 -1.4264 0.149 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>2.64291 -1.4264 0.149 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 1.9e-05 -0 -0.000128 2e-06 -0</acceleration>
+          <wrench>1e-06 3.8e-05 -1e-06 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='cardboard_box_clone_clone_0'>
+        <pose>-0.153004 -1.13054 0.149 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>-0.153004 -1.13054 0.149 0 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>-0 -1.9e-05 0 0.000128 -2e-06 -0</acceleration>
           <wrench>-1e-06 -3.8e-05 1e-06 0 -0 0</wrench>
         </link>
       </model>
-      <model name='cinder_block'>
-        <pose>-0.650049 -0.072395 -6e-06 -1e-06 2.8e-05 -0</pose>
+      <model name='cardboard_box_clone_clone_1'>
+        <pose>0.90053 0.824518 0.149 0 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-0.650049 -0.072395 -6e-06 -1e-06 2.8e-05 -0</pose>
+          <pose>0.90053 0.824518 0.149 0 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>-0 -0 0 0 -0 0</acceleration>
-          <wrench>-0 -0 0 0 -0 0</wrench>
+          <acceleration>0 1.9e-05 -0 -0.000128 2e-06 -0</acceleration>
+          <wrench>1e-06 3.8e-05 -1e-06 0 -0 0</wrench>
         </link>
       </model>
       <model name='ground_plane'>
@@ -147,16 +147,6 @@
         <scale>1 1 1</scale>
         <link name='link'>
           <pose>0 0 0 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>nan nan nan nan nan nan</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='postbox'>
-        <pose>-0.478331 0.573866 0 0 -0 0</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose>-0.478331 0.573866 0 0 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>nan nan nan nan nan nan</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
@@ -196,7 +186,7 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>-0.330584 -1.56188 7.28641 -0 1.4418 0.868124</pose>
+        <pose>0.728295 -0.313715 11.2075 0 1.5418 0.06817</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
@@ -442,206 +432,8 @@
         <kinematic>0</kinematic>
       </link>
     </model>
-    <model name='cinder_block'>
-      <link name='link'>
-        <inertial>
-          <pose>0 0 0.1016 0 -0 0</pose>
-          <mass>5</mass>
-          <inertia>
-            <ixx>0.028705</ixx>
-            <ixy>0</ixy>
-            <iyy>0.073708</iyy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-            <izz>0.06908</izz>
-          </inertia>
-        </inertial>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <uri>model://cinder_block/meshes/cinder_block.dae</uri>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name='left'>
-          <pose>0 -0.08465 0.1016 0 -0 0</pose>
-          <geometry>
-            <box>
-              <size>0.43495 0.0339 0.2032</size>
-            </box>
-          </geometry>
-          <surface>
-            <contact>
-              <ode>
-                <max_vel>0.1</max_vel>
-                <min_depth>0.001</min_depth>
-              </ode>
-            </contact>
-            <friction>
-              <ode>
-                <mu>1</mu>
-                <mu2>1</mu2>
-              </ode>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-            <bounce/>
-          </surface>
-          <max_contacts>10</max_contacts>
-        </collision>
-        <collision name='right'>
-          <pose>0 0.08465 0.1016 0 -0 0</pose>
-          <geometry>
-            <box>
-              <size>0.43495 0.0339 0.2032</size>
-            </box>
-          </geometry>
-          <surface>
-            <contact>
-              <ode>
-                <max_vel>0.1</max_vel>
-                <min_depth>0.001</min_depth>
-              </ode>
-            </contact>
-            <friction>
-              <ode>
-                <mu>1</mu>
-                <mu2>1</mu2>
-              </ode>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-            <bounce/>
-          </surface>
-          <max_contacts>10</max_contacts>
-        </collision>
-        <collision name='front'>
-          <pose>0.18625 0 0.1016 0 -0 0</pose>
-          <geometry>
-            <box>
-              <size>0.0339 0.1354 0.203</size>
-            </box>
-          </geometry>
-          <surface>
-            <contact>
-              <ode>
-                <max_vel>0.1</max_vel>
-                <min_depth>0.001</min_depth>
-              </ode>
-            </contact>
-            <friction>
-              <ode>
-                <mu>1</mu>
-                <mu2>1</mu2>
-              </ode>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-            <bounce/>
-          </surface>
-          <max_contacts>10</max_contacts>
-        </collision>
-        <collision name='middle'>
-          <pose>0 0 0.1016 0 -0 0</pose>
-          <geometry>
-            <box>
-              <size>0.0339 0.1354 0.203</size>
-            </box>
-          </geometry>
-          <surface>
-            <contact>
-              <ode>
-                <max_vel>0.1</max_vel>
-                <min_depth>0.001</min_depth>
-              </ode>
-            </contact>
-            <friction>
-              <ode>
-                <mu>1</mu>
-                <mu2>1</mu2>
-              </ode>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-            <bounce/>
-          </surface>
-          <max_contacts>10</max_contacts>
-        </collision>
-        <collision name='back'>
-          <pose>-0.18625 0 0.1016 0 -0 0</pose>
-          <geometry>
-            <box>
-              <size>0.0339 0.1354 0.203</size>
-            </box>
-          </geometry>
-          <surface>
-            <contact>
-              <ode>
-                <max_vel>0.1</max_vel>
-                <min_depth>0.001</min_depth>
-              </ode>
-            </contact>
-            <friction>
-              <ode>
-                <mu>1</mu>
-                <mu2>1</mu2>
-              </ode>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-            <bounce/>
-          </surface>
-          <max_contacts>10</max_contacts>
-        </collision>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-      <pose>-0.650049 -0.072395 0 0 -0 0</pose>
-    </model>
-    <model name='postbox'>
-      <static>1</static>
-      <link name='link'>
-        <collision name='collision'>
-          <geometry>
-            <mesh>
-              <uri>model://postbox/meshes/postbox.dae</uri>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-            <friction>
-              <torsional>
-                <ode/>
-              </torsional>
-              <ode/>
-            </friction>
-          </surface>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <uri>model://postbox/meshes/postbox.dae</uri>
-            </mesh>
-          </geometry>
-        </visual>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-      <pose>-0.478331 0.573866 0 0 -0 0</pose>
-    </model>
     <model name='cardboard_box_clone'>
-      <pose>2.11444 -0.47504 0.149 0 -0 0</pose>
+      <pose>1.00345 -1.21652 0.149 0 -0 0</pose>
       <link name='link'>
         <inertial>
           <mass>2</mass>
@@ -697,8 +489,8 @@
         <kinematic>0</kinematic>
       </link>
     </model>
-    <model name='cardboard_box_clone_0'>
-      <pose>2.13132 -1.12485 0.149 0 -0 0</pose>
+    <model name='cardboard_box_clone_clone'>
+      <pose>2.64291 -1.4264 0.149 0 -0 0</pose>
       <link name='link'>
         <inertial>
           <mass>2</mass>
@@ -754,8 +546,65 @@
         <kinematic>0</kinematic>
       </link>
     </model>
-    <model name='cardboard_box_clone_1'>
-      <pose>2.75024 -0.835708 0.149 0 -0 0</pose>
+    <model name='cardboard_box_clone_clone_0'>
+      <pose>-0.153004 -1.13054 0.149 0 -0 0</pose>
+      <link name='link'>
+        <inertial>
+          <mass>2</mass>
+          <inertia>
+            <ixx>0.0416667</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0566667</iyy>
+            <iyz>0</iyz>
+            <izz>0.0683333</izz>
+          </inertia>
+          <pose>0 0 0 0 -0 0</pose>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>0.5 0.4 0.3</size>
+            </box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <contact>
+              <ode>
+                <kp>1e+07</kp>
+                <kd>1</kd>
+                <min_depth>0.001</min_depth>
+                <max_vel>0.1</max_vel>
+              </ode>
+            </contact>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <pose>0 0 -0.15 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://cardboard_box/meshes/cardboard_box.dae</uri>
+              <scale>1.25932 1.00745 0.755591</scale>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name='cardboard_box_clone_clone_1'>
+      <pose>0.90053 0.824518 0.149 0 -0 0</pose>
       <link name='link'>
         <inertial>
           <mass>2</mass>
