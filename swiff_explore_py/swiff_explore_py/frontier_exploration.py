@@ -364,7 +364,7 @@ class FrontierExploration(Node):
             return
 
         if self.current_goal == closest_centroid:
-            print("Already navigating to this goal.")
+            # print("Already navigating to this goal.")
             return
 
         self.current_goal = closest_centroid
@@ -378,7 +378,6 @@ class FrontierExploration(Node):
     def goal_status_callback(self, msg: GoalStatusArray) -> None:
 
         latest_goal_status = msg.status_list[-1].status
-        print("Goal status: ", latest_goal_status)
         if latest_goal_status in [4, 6]:
             self.visited_goals.append(self.current_goal)
             self.current_goal = None
