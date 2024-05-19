@@ -3,13 +3,28 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.substitutions import Command
 from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 
 def generate_launch_description():
 
-    os.environ["TURTLEBOT3_MODEL"] = "waffle"
+    pkg_path = os.path.join(get_package_share_directory("swiff_bringup"))
+    xacro_file = os.path.join(pkg_path, "urdf", "robot.urdf.xacro")
+    robot_description_config = Command(["xacro ", xacro_file])
+
+    robot_state_publisher = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="screen",
+        parameters=[
+            {
+                "robot_description": robot_description_config,
+                "use_sim_time": True,
+            }
+        ],
+    )
 
     joystick = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -17,17 +32,6 @@ def generate_launch_description():
                 get_package_share_directory("swiff_bringup"),
                 "launch",
                 "joystick.launch.py",
-            )
-        ),
-        launch_arguments={"use_sim_time": "true"}.items(),
-    )
-
-    robot_state_publisher = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(
-                get_package_share_directory("turtlebot3_gazebo"),
-                "launch",
-                "robot_state_publisher.launch.py",
             )
         ),
         launch_arguments={"use_sim_time": "true"}.items(),
@@ -52,16 +56,11 @@ def generate_launch_description():
         }.items(),
     )
 
-    spawn_turtlebot3 = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            [
-                os.path.join(
-                    get_package_share_directory("turtlebot3_gazebo"),
-                    "launch",
-                    "spawn_turtlebot3.launch.py",
-                )
-            ]
-        )
+    spawn_robot = Node(
+        package="gazebo_ros",
+        executable="spawn_entity.py",
+        arguments=["-topic", "robot_description", "-entity", "my_bot"],
+        output="screen",
     )
 
     rviz2 = Node(
@@ -106,7 +105,7 @@ def generate_launch_description():
 
     delayed_launch = TimerAction(
         period=1.0,
-        actions=[rviz2, gazebo, spawn_turtlebot3, joystick, robot_state_publisher],
+        actions=[rviz2, gazebo, spawn_robot, joystick, robot_state_publisher],
     )
 
     return LaunchDescription([navigation, delayed_launch])
