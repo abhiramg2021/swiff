@@ -72,26 +72,41 @@ def generate_launch_description():
         arguments=[
             "-d",
             os.path.join(
-                get_package_share_directory("swiff_bringup"), "config", "map.rviz"
+                get_package_share_directory("swiff_bringup"),
+                "config",
+                "nav2_default_view.rviz",
             ),
         ],
         output="screen",
     )
 
-    slam_toolbox = IncludeLaunchDescription(
+    navigation = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            [
-                os.path.join(
-                    get_package_share_directory("slam_toolbox"),
-                    "launch",
-                    "online_async_launch.py",
-                )
-            ]
-        )
+            os.path.join(
+                get_package_share_directory("nav2_bringup"),
+                "launch",
+                "bringup_launch.py",
+            )
+        ),
+        launch_arguments={
+            "use_sim_time": "True",
+            "slam": "True",
+            "map": "",
+            "use_composition": "False",
+            "params_file": os.path.join(
+                get_package_share_directory("swiff_bringup"),
+                "config",
+                "nav2_params.yaml",
+            ),
+        }.items(),
     )
 
-    delayed_launch = TimerAction(period=5.0, actions=[rviz2, slam_toolbox])
+    # this is needed for some reason for the nodes the launch properly, and close properly when ctrl + c is used.
+    # otherwise there seems to be some conflict between launching gazebo and navigation node at the same time.
 
-    return LaunchDescription(
-        [joystick, robot_state_publisher, gazebo, spawn_turtlebot3, delayed_launch]
+    delayed_launch = TimerAction(
+        period=1.0,
+        actions=[rviz2, gazebo, spawn_turtlebot3, joystick, robot_state_publisher],
     )
+
+    return LaunchDescription([navigation, delayed_launch])
