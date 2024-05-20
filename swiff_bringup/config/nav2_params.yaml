@@ -140,7 +140,7 @@ controller_server:
     FollowPath:
       plugin: "nav2_rotation_shim_controller::RotationShimController"
       primary_controller: "dwb_core::DWBLocalPlanner"
-      angular_dist_threshold: 0.3
+      angular_dist_threshold: 0.78
       forward_sampling_distance: 0.1
       rotate_to_heading_angular_vel: 1.8
       max_angular_accel: 3.2
@@ -200,7 +200,7 @@ local_costmap:
       update_frequency: 5.0
       publish_frequency: 2.0
       global_frame: odom
-      robot_base_frame: base_link
+      robot_base_frame: base_footprint
       use_sim_time: True
       rolling_window: true
       width: 3

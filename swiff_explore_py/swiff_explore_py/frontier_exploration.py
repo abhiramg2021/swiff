@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 import math
+import time
+
+import numpy as np
 
 import rclpy
 from rclpy.node import Node
@@ -8,8 +11,6 @@ from action_msgs.msg import GoalStatusArray
 from geometry_msgs.msg import PoseStamped
 import tf2_ros
 from tf_transformations import quaternion_from_euler
-
-import numpy as np
 
 
 class FrontierExploration(Node):
@@ -132,14 +133,14 @@ class FrontierExploration(Node):
         return frontier_cells
 
     def compute_frontier_components(
-        self, frontier_cells: list[tuple[int, int]], min_size: int
+        self, frontier_cells: list[tuple[int, int]], min_centroid_size: int
     ) -> list[list[tuple[int, int]]]:
         """
         Compute frontier components from frontier cells.
 
         Args:
             frontier_cells (list[tuple[int, int]]): frontier cells
-            min_size (int): minimum size of a frontier component
+            min_centroid_size (int): minimum size of a frontier component
 
         Returns:
             list[list[tuple[int, int]]]: frontier components
@@ -170,7 +171,7 @@ class FrontierExploration(Node):
 
                     if (x, y) in frontier_cells:
                         stack.append((x, y))
-            if len(frontier_component) >= min_size:
+            if len(frontier_component) >= min_centroid_size:
                 frontier_components.append(frontier_component)
         return frontier_components
 
@@ -287,6 +288,7 @@ class FrontierExploration(Node):
         visited_goals = np.array(self.visited_goals)
         closest_centroid = None
         closest_centroid_dist = float("inf")
+
         for centroid in centroids:
             dist = self.euclidean_dist(robot_pos, centroid)
             if dist < closest_centroid_dist:
@@ -349,7 +351,7 @@ class FrontierExploration(Node):
             return
 
         frontier_components = self.compute_frontier_components(
-            frontier_cells, min_size=4
+            frontier_cells, min_centroid_size=2
         )
         centroids = self.compute_frontier_centroids(frontier_components)
         centroids = self.convert_coords_to_map_coords(centroids, self.map_info)
@@ -363,9 +365,13 @@ class FrontierExploration(Node):
             print("No valid centroid found.")
             return
 
-        if self.current_goal == closest_centroid:
-            # print("Already navigating to this goal.")
-            return
+        # if the new goal is not much closer than the current goal is, then don't change plans
+        # TODO: one big issue not checked here is if the current goal is unreachable.
+        if self.current_goal != None:
+            current_goal_dist = self.euclidean_dist(robot_pos, self.current_goal)
+            closest_centroid_dist = self.euclidean_dist(robot_pos, closest_centroid)
+            if abs(current_goal_dist - closest_centroid_dist) / current_goal_dist < 0.2:
+                return
 
         self.current_goal = closest_centroid
         self.publish_new_goal(robot_pos, closest_centroid)
@@ -373,7 +379,9 @@ class FrontierExploration(Node):
     def map_callback(self, msg: OccupancyGrid) -> None:
         self.map_ = msg.data
         self.map_info = msg.info
+        # start = time.perf_counter()
         self.explore()
+        # print(time.perf_counter() - start)
 
     def goal_status_callback(self, msg: GoalStatusArray) -> None:
 
@@ -381,6 +389,7 @@ class FrontierExploration(Node):
         if latest_goal_status in [4, 6]:
             self.visited_goals.append(self.current_goal)
             self.current_goal = None
+            self.explore()
 
 
 def main(args=None):
