@@ -351,7 +351,7 @@ class FrontierExploration(Node):
             return
 
         frontier_components = self.compute_frontier_components(
-            frontier_cells, min_centroid_size=2
+            frontier_cells, min_centroid_size=0
         )
         centroids = self.compute_frontier_centroids(frontier_components)
         centroids = self.convert_coords_to_map_coords(centroids, self.map_info)
@@ -370,7 +370,7 @@ class FrontierExploration(Node):
         if self.current_goal != None:
             current_goal_dist = self.euclidean_dist(robot_pos, self.current_goal)
             closest_centroid_dist = self.euclidean_dist(robot_pos, closest_centroid)
-            if abs(current_goal_dist - closest_centroid_dist) / current_goal_dist < 0.2:
+            if abs(current_goal_dist - closest_centroid_dist) / current_goal_dist:
                 return
 
         self.current_goal = closest_centroid
